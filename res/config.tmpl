@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sensor Configuration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            background: #f4f7f8;
+            color: #333;
+            padding: 20px;
+        }}
+
+        .container {{
+            max-width: 500px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }}
+
+        h2 {{
+            text-align: center;
+            color: #4CAF50;
+            font-size: 24px;
+        }}
+
+        label {{
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }}
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        select {{
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }}
+
+        input[type="submit"] {{
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin-top: 20px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }}
+
+        input[type="submit"]:hover {{
+            background-color: #45a049;
+        }}
+
+        /* Responsive design: increase font and padding on mobile */
+        @media (max-width: 600px) {{
+            .container {{
+                padding: 50px 40px;
+            }}
+
+            h2 {{
+                font-size: 32px;
+            }}
+
+            label,
+            input[type="text"],
+            input[type="password"],
+            input[type="number"],
+            select,
+            input[type="submit"] {{
+                font-size: 20px;
+            }}
+
+            input[type="submit"] {{
+                padding: 18px 24px;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Configure WiFi and MQTT</h2>
+        <form action="/" method="POST">
+            <label for="wifi_ssid">WiFi SSID</label>
+            <input type="text" id="wifi_ssid" name="wifi_ssid" value="{wifi_ssid}">
+
+            <label for="wifi_password">WiFi Password</label>
+            <input type="password" id="wifi_password" name="wifi_password" value="{wifi_password}">
+
+            <label for="mqtt_broker_hostname">MQTT Broker IP</label>
+            <input type="text" id="mqtt_broker_hostname" name="mqtt_broker_hostname" value="{mqtt_broker_hostname}">
+
+            <label for="mqtt_broker_port">MQTT Broker Port</label>
+            <input type="number" id="mqtt_broker_port" name="mqtt_broker_port" value="{mqtt_broker_port}">
+
+            <label for="mqtt_username">MQTT Username</label>
+            <input type="text" id="mqtt_username" name="mqtt_username" value="{mqtt_username}">
+
+            <label for="mqtt_password">MQTT Password</label>
+            <input type="password" id="mqtt_password" name="mqtt_password" value="{mqtt_pw}">
+
+            <label for="enable_mqtt_discovery">Enable MQTT Discovery</label>
+            <select id="enable_mqtt_discovery" name="enable_mqtt_discovery">
+                <option value="true" {mqtt_discovery_true}>True</option>
+                <option value="false" {mqtt_discovery_false}>False</option>
+            </select>
+
+            <label for="freq">Measurement Per day</label>
+            <input type="number" id="measurements_per_day" name="measurements_per_day" min="0" max="1440" value="{measurements_per_day}">
+
+            <input type="submit" value="Save">
+        </form>
+    </div>
+</body>
+</html>
