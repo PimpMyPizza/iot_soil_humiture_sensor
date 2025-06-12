@@ -29,13 +29,12 @@ This is a simple MicroPython project to read soil humidity and temperature senso
 1. Flash the MicroPython .uf2 file onto your Pico W, as described in the [official MicroPython documentation](https://micropython.org/download/RPI_PICO_W/).
 2. Use mpremote (or another tool) to copy files and run the script:
 ```bash
-# Upload files
-mpremote connect /dev/ttyACM0 fs cp main.py :
-mpremote connect /dev/ttyACM0 fs mkdir src
-mpremote connect /dev/ttyACM0 fs cp src/*.py :src/
-mpremote connect /dev/ttyACM0 fs mkdir res
-mpremote connect /dev/ttyACM0 fs cp res/*.tmpl :res/
-mpremote connect /dev/ttyACM0 fs cp main.py :main.py
+mpremote connect /dev/ttyACM0 \
+  fs mkdir src \
+  fs cp src/*.py :src/ \
+  fs mkdir res \
+  fs cp res/*.tmpl :res/ \
+  fs cp main.py :main.py
 ```
 
 ## Initial Device Setup
