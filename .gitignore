@@ -195,10 +195,8 @@ cython_debug/
 
 # CAD files for the case
 cad/*.3mf
-cad/*.blend
 cad/*.blend1
 cad/*.blend2
-cad/*.stl
 
 # Other
 *.bak

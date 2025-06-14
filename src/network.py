@@ -40,51 +40,51 @@ def start_ap_mode(config: Config):
         # Initial boot. We never read the MAC address of the pico W
         # So we read it an construct the MQTT object ID based on that
         # in order to have a unique ID to use in MQTT
-        mac = ap.config('mac')
-        mac_str = ''.join('{:02x}'.format(b) for b in mac)
+        mac = ap.config("mac")
+        mac_str = "".join("{:02x}".format(b) for b in mac)
         config.set_object_id(f"d-{mac_str}")
         config.save()
 
-    addr = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
+    addr = socket.getaddrinfo("0.0.0.0", 80)[0][-1]
     s = socket.socket()
     s.bind(addr)
     s.listen(1)
     print("Server listening on", addr)
 
     path_to_tmpl_files = "../res/"
-    
+
     with open(f"{path_to_tmpl_files}config.tmpl", "r") as f:
         config_page = f"HTTP/1.0 200 OK\n\n{f.read()}"
-    
+
     with open(f"{path_to_tmpl_files}changes_successful.tmpl", "r") as f:
         success_page = f"HTTP/1.0 200 OK\n\n{f.read()}"
 
     while True:
         cl, addr = s.accept()
-        print('Client connected from', addr)
-        cl_file = cl.makefile('rwb', 0)
-        
+        print("Client connected from", addr)
+        cl_file = cl.makefile("rwb", 0)
+
         request_line = cl_file.readline()
         if not request_line:
             cl.close()
             continue
         print("Request:", request_line)
-        
+
         # Read headers and data
         headers = {}
         while True:
             line = cl_file.readline()
-            if line == b'\r\n' or line == b'':
+            if line == b"\r\n" or line == b"":
                 break
             parts = line.decode().split(":", 1)
             if len(parts) == 2:
                 headers[parts[0].strip()] = parts[1].strip()
-        
+
         length = int(headers.get("Content-Length", 0))
         post_data = b""
         if length > 0:
             post_data = cl_file.read(length)
-        
+
         if request_line.startswith(b"POST"):
             # Parse form data
             data = post_data.decode()
@@ -97,12 +97,20 @@ def start_ap_mode(config: Config):
             config.set_values(
                 wifi_ssid=unquote(params.get("wifi_ssid", DEFAULT_WIFI_SSID)),
                 wifi_pw=unquote(params.get("wifi_password", DEFAULT_WIFI_PASSWORD)),
-                broker_host=unquote(params.get("mqtt_broker_hostname", DEFAULT_MQTT_BROKER_NAME)),
-                broker_port=unquote(params.get("mqtt_broker_port", DEFAULT_MQTT_BROKER_PORT)),
+                broker_host=unquote(
+                    params.get("mqtt_broker_hostname", DEFAULT_MQTT_BROKER_NAME)
+                ),
+                broker_port=unquote(
+                    params.get("mqtt_broker_port", DEFAULT_MQTT_BROKER_PORT)
+                ),
                 username=unquote(params.get("mqtt_username", DEFAULT_MQTT_USERNAME)),
                 password=unquote(params.get("mqtt_password", DEFAULT_MQTT_PASSWORD)),
-                enable_discovery=params.get("mqtt_enable_discovery", DEFAULT_MQTT_DISCOVERY_ENABLED),
-                measurements_per_day=params.get("measurements_per_day", DEFAULT_MEASUREMENTS_PER_DAY),
+                enable_discovery=params.get(
+                    "mqtt_enable_discovery", DEFAULT_MQTT_DISCOVERY_ENABLED
+                ),
+                measurements_per_day=params.get(
+                    "measurements_per_day", DEFAULT_MEASUREMENTS_PER_DAY
+                ),
             )
             config.save()
             cl.send(success_page)
@@ -111,7 +119,7 @@ def start_ap_mode(config: Config):
             time.sleep(3)
             machine.reset()
             return
-        
+
         # Serve config page with current values
         config_page_html = config_page.format(
             wifi_ssid=config.wifi.ssid,
@@ -120,9 +128,12 @@ def start_ap_mode(config: Config):
             mqtt_broker_port=config.mqtt.broker_port,
             mqtt_username=config.mqtt.username,
             mqtt_pw=config.mqtt.password,
-            # Set the selected tag depending on if MQTT is enabled or not in the config
-            mqtt_discovery_true="selected" if config.mqtt.discovery_enabled else "",
-            mqtt_discovery_false="selected" if not config.mqtt.discovery_enabled else "",
+            # Set the selected tag depending on if MQTT is enabled or
+            # not in the config
+            mqtt_discovery_true=("selected" if config.mqtt.discovery_enabled else ""),
+            mqtt_discovery_false=(
+                "selected" if not config.mqtt.discovery_enabled else ""
+            ),
             measurements_per_day=config.measurements_per_day,
         )
         cl.send(config_page_html.encode())

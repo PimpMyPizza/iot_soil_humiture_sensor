@@ -2,7 +2,12 @@ import machine
 import onewire
 import ds18x20
 import time
-from src.constants import *
+from src.constants import (
+    TEMPERATURE_DATA_PIN,
+    TEMPERATURE_SWITCH_ON_OFF_PIN,
+    PIN_ON,
+)
+
 
 # Set up the 1-Wire bus
 ds_pin = machine.Pin(TEMPERATURE_DATA_PIN)
@@ -20,7 +25,11 @@ print("Found DS18B20 devices:", roms)
 
 
 def read():
-    """Reads temperature in Celsius from the first DS18B20 sensor found."""
+    """
+    Reads temperature in Celsius from the first DS18B20 sensor found.
+
+    :return: a float or None if no sensor was found.
+    """
     if not roms:
         # No sensor found
         return None

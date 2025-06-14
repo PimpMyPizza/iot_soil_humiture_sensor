@@ -1,7 +1,7 @@
 # Change these only if you want to skip the setup of the device via the AP/HTTP server
-# and directly use your own settings for your home. If you left unchanged, you'll be
-# able to edit these by connecting to the pico W AP and connect to http://192.168.4.1
-# at initial boot.
+# and directly use your own settings for your home. If left unchanged, you'll be able
+# to edit these by connecting to the pico W AP and connect to http://192.168.4.1 at
+# initial boot.
 
 # Default Access Point settings
 AP_SSID = "Soil Sensor"
