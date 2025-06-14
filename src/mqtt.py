@@ -9,7 +9,7 @@ def publish(topic: str, payload, config: Config, retain: bool = False):
     """
     Sends a payload to a MQTT topic.
     """
-    message = json.dumps(payload).encode('utf-8')
+    message = json.dumps(payload).encode("utf-8")
     print(
         f"Send message to {config.mqtt.broker_hostname}:"
         f"{config.mqtt.broker_port} on topic {topic}."
@@ -34,17 +34,17 @@ def send_discovery(config: Config):
         "qos": 0,
         "dev": {
             "ids": config.mqtt.object_id,
-            "name": "", # Optional, prefix to components in HA.
+            "name": "",  # Optional, prefix to components in HA.
             "mf": "Stilmant.dev",
             "mdl": "Humidity and Temperature",
             "sw": "1.0.0",
             "sn": config.mqtt.object_id,
-            "hw": "1.0.0"
+            "hw": "1.0.0",
         },
         "o": {
             "name": "stilmant.dev",
             "sw": "1.0.1",
-            "url": "https://stilmant.dev/blog/"
+            "url": "https://stilmant.dev/blog/",
         },
         "cmps": {
             f"comp_{config.mqtt.object_id}_temperature": {
@@ -60,7 +60,7 @@ def send_discovery(config: Config):
                 "unit_of_measurement": "%",
                 "value_template": "{{ value_json.humidity | round(1) }}",
                 "unique_id": f"{config.mqtt.object_id}_humidity",
-            }
+            },
         },
     }
     try:

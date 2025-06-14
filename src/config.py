@@ -16,7 +16,7 @@ from src.constants import (
 
 
 class WifiConfig:
-    
+
     def __init__(self):
         self.ssid = DEFAULT_WIFI_SSID
         self.password = DEFAULT_WIFI_PASSWORD
@@ -27,17 +27,17 @@ class WifiConfig:
             self.password = data.get("password", DEFAULT_WIFI_PASSWORD)
         except Exception as e:
             print(f"Error while loading wifi config: {e}")
-    
+
     def to_dict(self):
         return {
             "ssid": self.ssid,
             "password": self.password,
         }
-    
+
     def set_values(self, ssid, password):
         self.ssid = ssid
         self.password = password
-    
+
     def valid(self):
         if not self.ssid:
             print(f"Invalid WiFi SSID in config {self.ssid}")
@@ -79,31 +79,26 @@ class MQTTConfig:
 
     def load(self, data: dict):
         try:
-            self.broker_hostname = data.get(
-                "broker_hostname", DEFAULT_MQTT_BROKER_NAME
-            )
-            self.broker_port = data.get(
-                "broker_port", DEFAULT_MQTT_BROKER_PORT
-            )
+            self.broker_hostname = data.get("broker_hostname", DEFAULT_MQTT_BROKER_NAME)
+            self.broker_port = data.get("broker_port", DEFAULT_MQTT_BROKER_PORT)
             self.device_state_topic = data.get(
-                "device_state_topic",
-                DEFAULT_MQTT_DEVICE_STATE_TOPIC)
+                "device_state_topic", DEFAULT_MQTT_DEVICE_STATE_TOPIC
+            )
             self.discovery_enabled = data.get(
-                "discovery_enabled",
-                DEFAULT_MQTT_DISCOVERY_ENABLED
+                "discovery_enabled", DEFAULT_MQTT_DISCOVERY_ENABLED
             )
             self.discovery_topic = data.get(
-                "discovery_topic",
-                DEFAULT_MQTT_DISCOVERY_TOPIC
+                "discovery_topic", DEFAULT_MQTT_DISCOVERY_TOPIC
             )
             self.username = data.get("username", DEFAULT_MQTT_USERNAME)
             self.password = data.get("password", DEFAULT_MQTT_PASSWORD)
             self.object_id = data.get("object_id", UNDEFINED_OBJECT_ID)
         except Exception as e:
             print(f"Error while loading wifi config: {e}")
-    
-    def set_values(self, broker_host, broker_port, username,
-                   password, enable_discovery):
+
+    def set_values(
+        self, broker_host, broker_port, username, password, enable_discovery
+    ):
         self.broker_hostname = broker_host
         if isinstance(broker_port, int):
             self.broker_port = broker_port
@@ -115,14 +110,13 @@ class MQTTConfig:
             self.discovery_enabled = True
         else:
             self.discovery_enabled = enable_discovery
-    
-    
+
     def valid(self):
         if not self.broker_hostname:
             print(f"Invalid broker hostname in config {self.broker_hostname}")
             return False
         if len(self.object_id) <= 5 or any(c in "<>" for c in self.object_id):
-            # object id must contain only letters, number, "-" 
+            # object id must contain only letters, number, "-"
             # or "_" and have a length betweem 5 and 20.
             print(f"Invalid object_id in config {self.object_id}")
             return False
@@ -145,28 +139,23 @@ class Config:
                 self.mqtt.load(data["mqtt"])
                 self.wifi.load(data["wifi"])
                 self.measurements_per_day = data.get(
-                    "measurements_per_day",
-                    DEFAULT_MEASUREMENTS_PER_DAY
+                    "measurements_per_day", DEFAULT_MEASUREMENTS_PER_DAY
                 )
         except Exception as e:
             print(f"Error while loading config file: {e}")
-    
+
     def valid(self) -> bool:
-        if (
-            not self.measurements_per_day or
-            not isinstance(self.measurements_per_day, int)
+        if not self.measurements_per_day or not isinstance(
+            self.measurements_per_day, int
         ):
-            print(
-                "Invalid measurements per day value " \
-                f"{self.measurements_per_day}"
-            )
+            print("Invalid measurements per day value " f"{self.measurements_per_day}")
             return False
         if not self.mqtt.valid():
             return False
         if not self.wifi.valid():
             return False
         return True
-    
+
     def to_dict(self):
         return {
             "measurements_per_day": self.measurements_per_day,
@@ -179,7 +168,7 @@ class Config:
         with open(self.output_path, "w") as f:
             json.dump(self.to_dict(), f)
         print("Config saved.")
-    
+
     def set_object_id(self, new_object_id: str):
         if not new_object_id:
             print("Cannot set an empty MQTT object ID.")
@@ -192,7 +181,7 @@ class Config:
             UNDEFINED_OBJECT_ID, self.mqtt.object_id
         )
         print(f"Set MQTT unique object id to {self.mqtt.object_id}")
-    
+
     def set_values(
         self,
         wifi_ssid: str,

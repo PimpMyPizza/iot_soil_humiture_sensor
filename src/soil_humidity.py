@@ -17,7 +17,7 @@ def read() -> float:
         moisture_percent = 100 - (val / max_adc_value * 100)
         values.append(moisture_percent)
         time.sleep(0.1)
-    
+
     # Increase readings stability by making an average of readings
     average_humidity = sum(values) / len(values)
     print(f"Soil humidity: {round(average_humidity, 3)} %")
