@@ -10,7 +10,10 @@ def publish(topic: str, payload, config: Config, retain: bool = False):
     Sends a payload to a MQTT topic.
     """
     message = json.dumps(payload).encode('utf-8')
-    print(f"Send following message to {config.mqtt.broker_hostname}:{config.mqtt.broker_port} on topic {topic}")
+    print(
+        f"Send message to {config.mqtt.broker_hostname}:"
+        f"{config.mqtt.broker_port} on topic {topic}."
+    )
     print(f"Client id {config.mqtt.object_id} \t Retain={retain}")
     print(f"{message}\n\n")
     client = MQTTClient(

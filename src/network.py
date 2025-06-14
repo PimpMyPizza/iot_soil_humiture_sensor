@@ -36,7 +36,10 @@ def start_ap_mode(config: Config):
     ap.active(True)
     print("AP started:", AP_SSID)
 
-    if config.mqtt.object_id == UNDEFINED_OBJECT_ID or not config.mqtt.object_id:
+    if (
+        config.mqtt.object_id == UNDEFINED_OBJECT_ID or
+        not config.mqtt.object_id
+    ):
         # Initial boot. We never read the MAC address of the pico W
         # So we read it an construct the MQTT object ID based on that
         # in order to have a unique ID to use in MQTT
@@ -95,14 +98,31 @@ def start_ap_mode(config: Config):
 
             # Update config
             config.set_values(
-                wifi_ssid=unquote(params.get("wifi_ssid", DEFAULT_WIFI_SSID)),
-                wifi_pw=unquote(params.get("wifi_password", DEFAULT_WIFI_PASSWORD)),
-                broker_host=unquote(params.get("mqtt_broker_hostname", DEFAULT_MQTT_BROKER_NAME)),
-                broker_port=unquote(params.get("mqtt_broker_port", DEFAULT_MQTT_BROKER_PORT)),
-                username=unquote(params.get("mqtt_username", DEFAULT_MQTT_USERNAME)),
-                password=unquote(params.get("mqtt_password", DEFAULT_MQTT_PASSWORD)),
-                enable_discovery=params.get("mqtt_enable_discovery", DEFAULT_MQTT_DISCOVERY_ENABLED),
-                measurements_per_day=params.get("measurements_per_day", DEFAULT_MEASUREMENTS_PER_DAY),
+                wifi_ssid=unquote(
+                    params.get("wifi_ssid", DEFAULT_WIFI_SSID)
+                ),
+                wifi_pw=unquote(
+                    params.get("wifi_password", DEFAULT_WIFI_PASSWORD)
+                ),
+                broker_host=unquote(
+                    params.get("mqtt_broker_hostname", DEFAULT_MQTT_BROKER_NAME)
+                ),
+                broker_port=unquote(
+                    params.get("mqtt_broker_port", DEFAULT_MQTT_BROKER_PORT)
+                ),
+                username=unquote(
+                    params.get("mqtt_username", DEFAULT_MQTT_USERNAME)
+                ),
+                password=unquote(
+                    params.get("mqtt_password", DEFAULT_MQTT_PASSWORD)
+                ),
+                enable_discovery=params.get(
+                    "mqtt_enable_discovery", DEFAULT_MQTT_DISCOVERY_ENABLED
+                ),
+                measurements_per_day=params.get(
+                    "measurements_per_day",
+                    DEFAULT_MEASUREMENTS_PER_DAY
+                ),
             )
             config.save()
             cl.send(success_page)
@@ -120,9 +140,14 @@ def start_ap_mode(config: Config):
             mqtt_broker_port=config.mqtt.broker_port,
             mqtt_username=config.mqtt.username,
             mqtt_pw=config.mqtt.password,
-            # Set the selected tag depending on if MQTT is enabled or not in the config
-            mqtt_discovery_true="selected" if config.mqtt.discovery_enabled else "",
-            mqtt_discovery_false="selected" if not config.mqtt.discovery_enabled else "",
+            # Set the selected tag depending on if MQTT is enabled or
+            # not in the config
+            mqtt_discovery_true=(
+                "selected" if config.mqtt.discovery_enabled else ""
+            ),
+            mqtt_discovery_false=(
+                "selected" if not config.mqtt.discovery_enabled else ""
+            ),
             measurements_per_day=config.measurements_per_day,
         )
         cl.send(config_page_html.encode())
